@@ -1,0 +1,9 @@
+<fuse-progress-bar></fuse-progress-bar>
+
+<ng-container *ngIf="fuseConfig.layout.style === 'main-layout'">
+    <main-layout></main-layout>
+</ng-container>
+
+<fuse-sidebar name="themeOptionsPanel" class="theme-options-sidebar" position="right" [invisibleOverlay]="true">
+    <fuse-theme-options></fuse-theme-options>
+</fuse-sidebar>

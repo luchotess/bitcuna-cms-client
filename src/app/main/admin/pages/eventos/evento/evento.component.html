@@ -1,0 +1,309 @@
+<div class="page-layout carded fullwidth" fusePerfectScrollbar>
+
+    <div class="top-bg accent"></div>
+
+    <div class="center">
+
+        <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+            <h2 class="m-0">Detalles del Evento</h2>
+        </div>
+
+        <div class="fuse-card">
+
+            <div class="p-16" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between center">
+
+                <div fxFlex="50" fxFlex.lt-md="100">
+                    <img src="{{ eventBannerFolder + evento.banner }}">
+                </div>
+
+                <div fxFlex="50" class="p-16" fxFlex.lt-md="100">
+                    <div class="h4 secondary-text">{{ evento.date | date:'MMMM d, y'}}</div>
+                    <div class="h4 secondary-text">{{ evento.time}} | <b>Limite Ingreso: {{ evento.timeLimit }}</b></div>
+                    <div class="h1">{{ evento.name }}</div>
+                    <p [innerHtml]="'<pre>' + evento.details + '</pre>'"></p>
+                    <button (click)="editEvento(evento)" mat-raised-button color="primary">
+                        <mat-icon class="s-16" fxHide.xs>edit</mat-icon>
+                        Editar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="center">
+        <div class="fuse-card" fxLayout="column" fxLayout.lt-md="column" fxLayoutAlign="space-between start">
+            <div class="content-card fullwidth" fxFlex="100" fxFlex.lt-md="100">
+                <div class="p-24">
+                    <div class="h1">Promotores</div>
+                    <div class="h4 secondary-text">Tienes {{ evento.promotores.length }} promotores asignados
+                        para este evento
+                    </div>
+                </div>
+
+
+                <div class="actions" fxLayout="row" fxLayout.lt-md="column"  fxLayoutAlign="start center" class="p-24 ">
+
+                    <mat-form-field class="mr-24" fxFlex.lt-md="100">
+                        <mat-select placeholder="Lista de Promotores" [(ngModel)]="selectedPromotor">
+                            <mat-option *ngFor="let promotor of promotores" [value]="promotor">
+                                {{promotor.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div fxFlex.lt-md="100">
+                        <button (click)="addPromotorToEvent()" mat-raised-button color="primary">Agregar promotor
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content tabla-promotor">
+                    <ng-template #noPromotores>
+                        <div class="h4 secondary-text">No hay promotores asignados.</div>
+                    </ng-template>
+
+                    <promotores-evento-table [evento]="evento"
+                                             (onGetEvento)="getEvento()"
+                                             *ngIf="evento.promotores.length > 0; else noPromotores">
+                    </promotores-evento-table>
+                </div>
+            </div>
+
+            <div class="content-card fullwidth" fxFlex="100" fxFlex.lt-md="100">
+                <div class="p-24">
+                    <div class="h1">Puertas</div>
+                    <div class="h4 secondary-text">Tienes {{ puertas.value.length }} puertas asignadas para este
+                        evento
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="start center" class="actions py-36 px-24">
+                    <button mat-raised-button color="primary" (click)="addPuerta()">Agregar puerta</button>
+                </div>
+
+                <div class="content tabla-puerta px-24">
+                    <ng-template #noPuertas>
+                        <div class="h4 secondary-text">No hay puertas asignadas.</div>
+                    </ng-template>
+                    <mat-table [dataSource]="puertas" class="mat-elevation-z8" style="margin-top: 6px"
+                               *ngIf="puertas.value.length > 0; else noPuertas">
+                        <ng-container matColumnDef="avatar">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <img class="avatar" src="/api/images/profiles/{{ element.avatar ? element.avatar : 'default-allpaqas.png' }}"/>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="name">
+                            <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{ element.name }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="email">
+                            <mat-header-cell *matHeaderCellDef>Correo</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{ element.username }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="phone">
+                            <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{ element.phone }}
+                            </mat-cell>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="actions">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            npm start
+                            <mat-cell *matCellDef="let element">
+                                <button mat-button color="accent" (click)="editPuerta(element)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-button color="warn" (click)="deletePuerta(element)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                </div>
+            </div>
+        </div>
+
+        <div class="fuse-card">
+            <div class="p-24">
+                <div class="h1">Invitados</div>
+            </div>
+            <div class="content">
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between">
+
+                    <div fxFlex="30" fxFlex.lt-md="100" fxLayout="row" fxLayout.lt-md="column" >
+                        <div class="p-24" fxFlex.lt-md="100">
+                            <div class="h4 secondary-text">Invitados Totales</div>
+                            <div class="h1">{{evento.invitados.length}} Invitados</div>
+                            <!--<p>El promotor con más invitados es <b>{{ promotores[0] ? promotores[0].name : '' }}</b> con
+                                <b>15 invitados.</b></p>-->
+                        </div>
+                        <div class="p-24 text-right" fxFlex.lt-md="100">
+                            <div class="h4 secondary-text">Asistentes</div>
+                            <div class="h1">{{evento.asistentes}}</div>
+                            <p>Asistieron el <b>{{ evento.asistentesPercentage | percent }}</b> del los invitados.</p>
+                        </div>
+                    </div>
+
+                    <div fxFlex="70" fxFlex.lt-md="100" class="p-16">
+                        <button mat-raised-button color="accent" (click)="addGuess()" class="mb-16 mr-16">Agregar Invitados
+                        </button>
+                        <button mat-raised-button color="primary" (click)="generateLink()" class="mb-16 mr-16">
+                            Generar Link
+                        </button>
+                        <button mat-raised-button color="basic" (click)="exportTableInvitados()" class="mb-16">
+                            Descargar Lista de Invitados
+                        </button>
+                        <ng-template #noInvitados>
+                            <div class="h4 secondary-text">Evento aún sin invitados.</div>
+                        </ng-template>
+                        <mat-table [dataSource]="dataSourceInvitados" class="mat-elevation-z8" matSort
+                                   *ngIf="evento.invitados.length > 0; else noInvitados" (matSortChange)="sortData($event)">
+
+                            <ng-container matColumnDef="name">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                                <mat-cell [ngClass]="{'ingreso': element.ingreso}"
+                                          *matCellDef="let element" fxLayout="column" fxLayoutAlign="center start"
+                                          class="p-16">
+                                    <span>{{ element.name }}</span>
+                                    <span *ngIf="element.ingreso"><b>Ingreso: </b>{{element.fechaIngreso | date:'h:mm a'}}</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="promotor">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Promotor</mat-header-cell>
+                                <mat-cell [ngClass]="{'ingreso': element.ingreso}" *matCellDef="let element">
+                                    {{ element.promotor.name }}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="fecha">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+                                <mat-cell [ngClass]="{'ingreso': element.ingreso}" *matCellDef="let element">
+                                    {{ element.date | date:'MMMM d, y | h:mm a'}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actions">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                <mat-cell [ngClass]="{'ingreso': element.ingreso}" *matCellDef="let element">
+                                    <button mat-button color="warn" (click)="deleteInvitado(element)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumnsInvitados"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsInvitados;"></mat-row>
+                        </mat-table>
+
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="fuse-card">
+            <div class="p-24">
+                <div class="h1">Gestión de Boxes</div>
+            </div>
+
+            <div class="content">
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="start start">
+                    <div class="px-24" fxFlex="35" fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="start start">
+                        <button mat-raised-button color="basic" class="mb-16" (click)="fileInput.click()">
+                            <mat-icon class="s-16" fxHide.xs>edit</mat-icon>
+                            Editar mapa de boxes
+                        </button>
+                        <input hidden (change)="onFileSelected(fileInput)" #fileInput type="file" id="file"
+                               ng2FileSelect [uploader]="uploader">
+                        <div class="img-box">
+                            <img src="{{ eventBoxesmapFolder + evento.boxesmap }}">
+                        </div>
+                    </div>
+
+                    <div fxFlex="65" fxFlex.lt-md="100" fxLayout="column" fxLayout.lt-md="column" class="fullwidth">
+                        <div class="p-24">
+                            <div class="h1">Boxes Disponibles</div>
+                            <div class="h4 secondary-text">
+                                Tienes <b>{{ evento.boxesDisponibles }}</b> boxes disponibles de <b>{{ boxes.value.length }}</b> para este evento
+                            </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayoutAlign="space-between center" class="actions px-24">
+                            <button mat-raised-button (click)="addBox()" color="primary">Agregar box</button>
+                        </div>
+
+                        <div class="p-24">
+                            <ng-template #noBoxes>
+                                <div class="h4 secondary-text">No hay boxes asignados.</div>
+                            </ng-template>
+                            <mat-table [dataSource]="boxes" class="mat-elevation-z8"
+                                       *ngIf="boxes.value.length > 0; else noBoxes">
+
+                                <ng-container matColumnDef="name">
+                                    <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" fxLayout="column"
+                                              fxLayoutAlign="center start" class="py-16">
+                                        <span>{{ element.name }}</span>
+                                        <span>
+                                            <b>{{ element.reservado ? 'Reservado' : 'Libre' }}</b>
+                                            <span class="pl-4" *ngIf="_AuthService.user.type !== 'promotor' &&  element.reservado">
+                                                <b>por: </b>
+                                                {{element.promotor ? element.promotor.name : 'Error'}}
+                                            </span>
+                                        </span>
+                                        <span *ngIf="element.reservado"><b>Para: </b>{{ element.invitado }}</span>
+                                        <span *ngIf="element.ingreso"><b>Ingreso: </b>{{element.fechaIngreso | date:'h:mm a'}}</span>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="email">
+                                    <mat-header-cell *matHeaderCellDef>Capacidad</mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{ element.capacity }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="phone">
+                                    <mat-header-cell *matHeaderCellDef>Detalles</mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{ element.details }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="actions">
+                                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        <button mat-button color="accent" (click)="editBox(element)">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button mat-button color="warn" (click)="deleteBox(element)">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                            </mat-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

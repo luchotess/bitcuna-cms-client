@@ -1,0 +1,62 @@
+<div class="page-layout carded fullwidth" fusePerfectScrollbar>
+
+    <div class="top-bg accent"></div>
+
+    <div class="center">
+
+        <div class="header accent p-24" fxLayout="row" fxLayoutAlign="center center">
+
+            <img class="logoinvite" src="assets/images/logos/fuse.svg">
+            <h2 class="m-0 text-center">SEVEN PER WEEK</h2>
+        </div>
+
+        <div class="fuse-card">
+
+            <div class="p-16" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between center">
+
+                <div fxFlex="50" fxFlex.lt-md="100">
+                    <img src="{{ eventBannerFolder + evento.banner }}">
+                </div>
+
+                <div fxFlex="50" fxFlex.lt-md="100" class="p-16">
+                    <div class="h4 secondary-text">{{ evento.date | date:'MMMM d, y'}}</div>
+                    <div class="h1">{{ evento.name }}</div>
+                    <p [innerHtml]="'<pre>' + evento.details + '</pre>'"></p>
+                </div>
+            </div>
+
+            <ng-template #mensajeExito>
+                <div class="p-16" fxLayout="column" fxLayoutAlign="center center">
+                    <span class="h1">¡Lista de invitados enviada!</span>
+                    <span class="h1">¡Te esperamos!</span>
+                </div>
+            </ng-template>
+
+            <div class="p-16" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" *ngIf="!done; else mensajeExito">
+                <form [formGroup]="eventoForm">
+
+                    <div fxLayout="column" fxLayoutAlign="center center">
+                        <p class="mb-36">Coloca el nombre de los invitados en diferentes lineas, no puedes usar caracteres especiales(@,#, no emojis, no tildes);
+                            como ejemplo: <br> Juan Perez<br> Jose Lopez</p>
+
+                        <mat-form-field appearance="outline" fxFlex class="long-field">
+                            <mat-label>Invitados</mat-label>
+                            <textarea name="invitados" formControlName="invitados" matInput required></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <button *ngIf="action !== 'edit'"
+                            mat-raised-button color="accent"
+                            class="save-button"
+                            (click)="invitar()"
+                            [disabled]="eventoForm.invalid"
+                            aria-label="SAVE">
+                        Agregar Invitados a evento
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>

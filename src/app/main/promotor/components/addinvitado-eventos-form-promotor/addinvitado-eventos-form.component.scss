@@ -1,0 +1,13 @@
+@import "src/@fuse/scss/fuse";
+.mat-dialog-container {
+    padding: 0;
+}
+
+.long-field {
+    width: 375px;
+}
+
+textarea {
+    resize: none !important;
+    height: 250px;
+}

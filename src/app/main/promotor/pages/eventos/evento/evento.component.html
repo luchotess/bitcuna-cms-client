@@ -1,0 +1,196 @@
+<div class="page-layout carded fullwidth" fusePerfectScrollbar>
+
+    <div class="top-bg accent"></div>
+
+    <div class="center">
+
+        <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+            <h2 class="m-0">Detalles del Evento</h2>
+        </div>
+
+        <div class="fuse-card">
+
+            <div class="p-16" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between center">
+
+                <div fxFlex="50" fxFlex.lt-md="100">
+                    <img src="{{ eventBannerFolder + evento.banner }}">
+                </div>
+
+                <div fxFlex="50" fxFlex.lt-md="100" class="p-16">
+                    <div class="h4 secondary-text">{{ evento.date | date:'MMMM d, y'}}</div>
+                    <div class="h4 secondary-text">{{ evento.time}} | <b>Limite Ingreso: {{ evento.timeLimit }}</b></div>
+                    <div class="h1">{{ evento.name }}</div>
+                    <p [innerHtml]="'<pre>' + evento.details + '</pre>'"></p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="center">
+        <div class="fuse-card fullwidth">
+            <div class="p-24">
+                <div class="h1">Invitados</div>
+            </div>
+            <div class="content">
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between center">
+
+                    <div fxFlex="50" fxFlex.lt-lg="100" fxLayout="row" fxLayout.lt-md="column"
+                         *ngIf="_AuthService.user.type !== 'puerta'">
+                        <div class="p-24">
+                            <div class="h4 secondary-text">Has Invitado a</div>
+                            <div class="h1">{{invitados.length}} personas</div>
+                        </div>
+                        <div class="p-24 text-right" fxFlex.lt-md="100">
+                            <div class="h4 secondary-text">Asistentes</div>
+                            <div class="h1">{{evento.asistentes}}</div>
+                            <p>Asistieron el <b>{{ evento.asistentesPercentage | percent }}</b> del los invitados.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-16 ipad-width" fxFlex.lt-md="100" fxLayout="column" [fxFlex]="_AuthService.user.type !== 'puerta' ? 50 : 100">
+                        <div fxFlex="row">
+                            <button mat-raised-button color="primary" (click)="addGuess()" class="mb-16 mr-16"
+                                    *ngIf="_AuthService.user.type !== 'puerta'">
+                                Agregar Invitados
+                            </button>
+
+                            <button mat-raised-button color="primary" (click)="generateLink()" class="mb-16 mr-16"
+                                    *ngIf="_AuthService.user.type !== 'puerta'">
+                                Generar Link
+                            </button>
+
+                            <button mat-raised-button color="basic" (click)="exportTableInvitados()" class="mb-16">
+                                Descargar Lista de Invitados
+                            </button>
+                        </div>
+
+                        <ng-template #noInvitados>
+                            <div class="h4 secondary-text">No has invitado personas aún a este evento.</div>
+                        </ng-template>
+
+                        <mat-form-field *ngIf="invitados.length > 0">
+                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar por nombre">
+                        </mat-form-field>
+
+                        <mat-table [dataSource]="invitadosDatasource" class="mat-elevation-z8" matSort
+                                   *ngIf="invitados.length > 0; else noInvitados" (matSortChange)="sortData($event)">
+
+                            <ng-container matColumnDef="name">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                                <mat-cell *matCellDef="let element" fxLayout="column" fxLayoutAlign="center start"
+                                          class="py-16">
+                                    <span>{{ element.name }}</span>
+                                    <span *ngIf="element.ingreso"><b>Ingreso: </b>{{element.fechaIngreso | date:'h:mm a'}}</span>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actions">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    <button mat-button color="accent" (click)="marcarIngresoInvitado(element._id)"
+                                            *ngIf="_AuthService.user.type === 'puerta'" [disabled]="element.ingreso">
+                                        Marcar Ingreso
+                                    </button>
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        </mat-table>
+
+                        <mat-paginator [pageSizeOptions]="[50, 100]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fuse-card">
+            <div class="p-24">
+                <div class="h1">Gestión de Boxes</div>
+            </div>
+
+            <div class="content">
+                <ng-template #noBoxesAllowed>
+                    <div class="h4 secondary-text p-24">No tienes boxes habilitados para este evento.</div>
+                </ng-template>
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between center"
+                     *ngIf="boxesAllowed(); else noBoxesAllowed">
+                    <div class="px-24" fxFlex="50" fxFlex.lt-md="100" *ngIf="_AuthService.user.type !== 'puerta'">
+                        <div class="">
+                            <img src="{{ eventBoxesmapFolder + evento.boxesmap }}">
+                        </div>
+                    </div>
+                    <div fxFlex.lt-md="100" [fxFlex]="_AuthService.user.type === 'puerta' ? 100 : 50">
+                        <div class="p-24">
+                            <div class="h1">Boxes Disponibles</div>
+                            <div class="h4 secondary-text">
+                                Tienes <b>{{ evento.boxesDisponibles }}</b> boxes disponibles de <b>{{
+                                boxes.value.length }}</b> para este evento
+                            </div>
+                        </div>
+
+                        <div class="p-24">
+                            <ng-template #noBoxes>
+                                <div class="h4 secondary-text">No hay boxes asignados.</div>
+                            </ng-template>
+                            <mat-table [dataSource]="boxes" class="mat-elevation-z8"
+                                       *ngIf="boxes.value.length > 0; else noBoxes">
+
+                                <ng-container matColumnDef="name">
+                                    <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" fxLayout="column"
+                                              fxLayoutAlign="center start" class="py-16">
+                                        <span>{{ element.name }}</span>
+                                        <span>
+                                            <b>{{ element.reservado ? 'Reservado' : 'Libre' }}</b>
+                                            <span class="pl-4" *ngIf="_AuthService.user.type !== 'promotor'">
+                                                <b>por: </b>
+                                                {{element.promotor ? element.promotor.name : 'Error'}}
+                                            </span>
+                                        </span>
+                                        <span *ngIf="element.reservado"><b>Para: </b>{{ element.invitado }}</span>
+                                        <span *ngIf="element.ingreso"><b>Ingreso: </b>{{element.fechaIngreso | date:'h:mm a'}}</span>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="capacidad">
+                                    <mat-header-cell *matHeaderCellDef>Capacidad</mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{ element.capacity }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="phone">
+                                    <mat-header-cell *matHeaderCellDef>Detalles</mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{ element.details }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="actions">
+                                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        <button mat-button color="accent" [disabled]="element.reservado"
+                                                *ngIf="_AuthService.user.type !== 'puerta'"
+                                                (click)="reservarBox(element)">
+                                            Reservar Box
+                                        </button>
+
+                                        <button mat-button color="accent" *ngIf="_AuthService.user.type === 'puerta'"
+                                                [disabled]="element.ingreso"
+                                                (click)="reclamarBox(element)">
+                                            Reclamar Box
+                                        </button>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumnsbox"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsbox;"></mat-row>
+                            </mat-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<h1 matDialogTitle>{{ title !== '' ? title : 'Confirme los datos antes de continuar'}}</h1>
+<div mat-dialog-content>
+    {{confirmMessage}}
+
+    <div fxLayout="column" *ngIf="invitados.length > 0">
+        <h4 *ngFor="let invitado of invitados">{{ invitado }}</h4>
+    </div>
+
+</div>
+<div mat-dialog-actions class="py-24">
+    <button mat-raised-button class="mat-accent mr-16" (click)="dialogRef.close(true)">Confirmar</button>
+    <button mat-button (click)="dialogRef.close(false)">Cancelar</button>
+</div>

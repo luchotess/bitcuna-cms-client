@@ -1,0 +1,62 @@
+<mat-toolbar class="p-0 mat-elevation-z1">
+
+    <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+
+        <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+
+            <button mat-icon-button class="navbar-toggle-button"
+                    *ngIf="!hiddenNavbar && !rightNavbar" (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+                <mat-icon class="secondary-text">menu</mat-icon>
+            </button>
+
+            <div class="toolbar-separator" *ngIf="!hiddenNavbar && !rightNavbar" fxHide.gt-md></div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" *ngIf="horizontalNavbar">
+                <div class="logo ml-16">
+                    <img class="logo-icon" src="/assets/images/logos/logo.png">
+                </div>
+            </div>
+
+            <div class="px-8 px-md-16 mobilenone">
+                <button mat-button class="user-button" (click)="goBack()">
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                        <mat-icon class="s-16" fxHide.xs>keyboard_arrow_left</mat-icon>
+                        <span class="username mr-12" fxHide fxShow.gt-sm>Atrás</span>
+                    </div>
+                </button>
+            </div>
+            <div class="logocenter" >
+                <span class="">AltPaca CMS</span>
+            </div>
+        </div>
+
+        <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+
+            <button mat-button [matMenuTriggerFor]="userMenu"
+                    class="user-button">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <img class="avatar mr-0 mr-sm-16" src="/assets/images/logo-mini.png">
+                    <span class="username mr-12" fxHide fxShow.gt-sm>{{ _AuthService.user.name }}</span>
+                    <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+                </div>
+            </button>
+
+            <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+
+                <button mat-menu-item (click)="openProfileSettings()">
+                    <mat-icon>account_circle</mat-icon>
+                    <span>Configuración de Cuenta</span>
+                </button>
+
+                <button mat-menu-item class="" (click)="logout()">
+                    <mat-icon>exit_to_app</mat-icon>
+                    <span>Salir</span>
+                </button>
+
+            </mat-menu>
+
+        </div>
+
+    </div>
+
+</mat-toolbar>

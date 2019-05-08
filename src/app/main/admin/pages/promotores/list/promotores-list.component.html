@@ -1,0 +1,43 @@
+<div class="page-layout carded fullwidth" fusePerfectScrollbar>
+
+    <div class="top-bg accent"></div>
+
+    <div class="center">
+        <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+            <h2 class="m-0">Página: {{ page }}</h2>
+        </div>
+
+        <div class="content-card">
+
+            <div class="toolbar px-24 py-8">
+                <span>Edita el contenido de la página</span>
+            </div>
+
+            <div class="actions" fxLayout="row" fxLayoutAlign="start center" class="p-24">
+                <button mat-raised-button color="primary">Guardar Cambios</button>
+                <button mat-raised-button color="secondary" class="ml-12" (click)="changeLanguage()">Cambiar Idioma</button>
+            </div>
+
+            <div class="content px-24 pt-24" *ngIf="fields.length > 0">
+                <div fxLayout="row" fxLayoutAlign="start start" *ngFor="let field of fields">
+                    <mat-form-field appearance="outline" fxFlex class="long-field">
+                        <mat-label>{{ field.key }}</mat-label>
+                        <input [name]="field.key" [(ngModel)]="field.values[language]" matInput required>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="content px-24 pt-24" *ngFor="let childBlock of childBlocks">
+                <h3>{{ childBlocks[0].name }}</h3>
+                <div fxLayout="row" fxLayoutAlign="start start" *ngFor="let field of childBlock.fields">
+                    <mat-form-field appearance="outline" fxFlex class="long-field">
+                        <mat-label>{{ field.key }}</mat-label>
+                        <input [name]="field.key" [(ngModel)]="field.values[language]" matInput required>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

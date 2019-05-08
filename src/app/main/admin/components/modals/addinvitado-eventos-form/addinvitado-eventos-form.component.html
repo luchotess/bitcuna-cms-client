@@ -1,0 +1,47 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0 event-cover"
+                 [ngStyle]="{'background-image': 'url(' + eventBannerFolder + evento.banner + ')'}">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pb-0 m-0" fusePerfectScrollbar>
+        <p>No puedes usar caracteres especiales(@,#, no emojis, no tildes);
+            como ejemplo: <br> Juan Perez<br> Jose Lopez </p>
+        <form [formGroup]="eventoForm">
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex class="long-field">
+                    <mat-label>Invitados</mat-label>
+                    <textarea name="invitados" formControlName="invitados" matInput required></textarea>
+                </mat-form-field>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+        <button *ngIf="action !== 'edit'"
+                mat-button
+                class="save-button"
+                (click)="matDialogRef.close(eventoForm)"
+                [disabled]="eventoForm.invalid"
+                aria-label="SAVE">
+            Agregar
+        </button>
+
+        <button *ngIf="action === 'edit'"
+                mat-button
+                class="save-button"
+                (click)="matDialogRef.close(['save',eventoForm])"
+                [disabled]="eventoForm.invalid"
+                aria-label="SAVE">
+            Guardar
+        </button>
+
+    </div>
+</div>

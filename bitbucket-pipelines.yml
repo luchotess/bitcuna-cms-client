@@ -1,0 +1,58 @@
+image: node:8
+
+pipelines:
+    branches:
+        dev:
+        - step:
+              name: Build Angular Application
+              caches:
+              - node
+              script:
+              - npm install
+              - npm run build-prod
+              artifacts:
+              - dist/**
+        - step:
+              name: Dev Deploy
+              deployment: test
+              script:
+              - ssh -i ~/.ssh/config wolfpack-client@$SERVER "rm -r -f /var/$PROJECT_FOLDER"
+              - ssh -i ~/.ssh/config wolfpack-client@$SERVER "mkdir /var/$PROJECT_FOLDER"
+              - scp -r -i ~/.ssh/config dist/* wolfpack-client@$SERVER:/var/$PROJECT_FOLDER
+
+    custom:
+        deploy-to-staging:
+        - step:
+              name: Build Angular Application
+              caches:
+              - node
+              script:
+              - npm install
+              - npm run build-prod
+              artifacts:
+              - dist/**
+        - step:
+              name: Staging Deploy
+              deployment: staging
+              script:
+              - ssh -i ~/.ssh/config wolfpack-client@$SERVER "rm -r -f /var/$PROJECT_FOLDER"
+              - ssh -i ~/.ssh/config wolfpack-client@$SERVER "mkdir /var/$PROJECT_FOLDER"
+              - scp -r -i ~/.ssh/config dist/* wolfpack-client@$SERVER:/var/$PROJECT_FOLDER
+
+        deploy-to-production:
+        - step:
+              name: Build Angular Application
+              caches:
+              - node
+              script:
+              - npm install
+              - npm run build-prod
+              artifacts:
+              - dist/**
+        - step:
+              name: Production Deploy
+              deployment: production
+              script:
+              - ssh -i ~/.ssh/config wolfpack-client@$SERVER "rm -r -f /var/$PROJECT_FOLDER"
+              - ssh -i ~/.ssh/config wolfpack-client@$SERVER "mkdir /var/$PROJECT_FOLDER"
+              - scp -r -i ~/.ssh/config dist/* wolfpack-client@$SERVER:/var/$PROJECT_FOLDER

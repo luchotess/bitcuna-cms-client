@@ -1,0 +1,15 @@
+// Import Fuse core library
+@import "@fuse/scss/core";
+// Import app.theme.scss
+@import "app/app.theme";
+
+.mat-checkbox-layout {
+    white-space: pre-line !important;
+}
+
+pre {
+    font-family: 'Muli', 'Helvetica Neue', 'Arial', sans-serif !important;
+    line-height: 1.4 !important;
+    letter-spacing: -0.1px !important;
+    margin: 0 !important;
+}

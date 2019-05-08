@@ -1,0 +1,53 @@
+<ng-template #noPromotores>
+    <div class="h4 secondary-text">No hay promotores asignados.</div>
+</ng-template>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+           *ngIf="promotoresAsignados.length > 0; else noPromotores">
+    <ng-container matColumnDef="avatar">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <img class="avatar" src="/api/images/profiles/{{ element.avatar ? element.avatar : 'default-allpaqas.png' }}"/>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef class="p-24">Nombre</mat-header-cell>
+        <mat-cell *matCellDef="let element" fxLayout="column" fxLayoutAlign="center start" class="p-24">
+            <span class="h3"><b>{{ element.name }}</b></span>
+            <span>Asistentes: {{ element.asistentes }} / {{ element.invitados }} | <b>{{ element.eficiencia | percent}}</b></span>
+
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef>Correo</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            {{ element.username }}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="phone">
+        <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            {{ element.phone }}
+        </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <button mat-button color="accent" (click)="openPermisosPromotor(element, evento)">
+                <mat-icon>edit</mat-icon>
+                <span>Permisos</span>
+            </button>
+            <button mat-button color="warn" (click)="deletePromotor(element)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
