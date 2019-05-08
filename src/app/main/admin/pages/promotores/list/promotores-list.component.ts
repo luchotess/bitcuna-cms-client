@@ -52,4 +52,15 @@ export class PromotoresListComponent implements OnInit {
             this.childBlocks = page['childBlocks'];
         });
     }
+
+    onFileSelected (filename: HTMLInputElement): void {
+    }
+
+    isFile (field): void {
+        return field.values[this.language].includes('file:');
+    }
+
+    renderFile (field): void {
+        return field.values[this.language].replace('file:', '');
+    }
 }
