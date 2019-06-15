@@ -13,6 +13,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { navigation }  from 'app/navigation/navigation';
 import { AuthService } from './auth/auth.service';
+import { AdminService } from './main/admin/admin.service';
 
 @Component({
     selector   : 'app',
@@ -36,7 +37,8 @@ export class AppComponent implements OnInit, OnDestroy
         private _fuseTranslationLoaderService: FuseTranslationLoaderService,
         private _translateService: TranslateService,
         private _platform: Platform,
-        private _AuthService: AuthService
+        private _AuthService: AuthService,
+        private _AdminService: AdminService
     )
     {
         // Get default navigation
@@ -108,25 +110,7 @@ export class AppComponent implements OnInit, OnDestroy
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
 
-    getNavigation (): void {
-        this._fuseNavigationService.getDynamicNavigation().subscribe(response => {
-           const newNavigation = [];
-
-           this._fuseNavigationService.navigationPages = response;
-
-            response.forEach(nav => newNavigation.push({
-                id   : nav.name,
-                title: nav.name,
-                type : 'item',
-                icon : 'dashboard',
-                url  : '/admin/pages/' + nav.name
-            }));
-
-            this._fuseNavigationService.updateNavigationItem('admin', {
-                children: newNavigation
-            });
-        });
-    }
+    getNavigation (): void { }
 
     /**
      * On init

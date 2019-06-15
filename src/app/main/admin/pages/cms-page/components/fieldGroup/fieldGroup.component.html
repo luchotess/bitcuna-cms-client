@@ -1,0 +1,11 @@
+<h2>{{ label | titlecase }}</h2>
+
+<div fxLayout="row" fxLayoutAlign="start start" *ngFor="let field of fieldKeys(fields)">
+    <field [label]="field" [field]="fields[field]" *ngIf="fields[field].es || isFinal(fields[field])" [reference]="fields"></field>
+
+    <field-array [label]="field" [arrayFields]="fields[field]" *ngIf="fields[field].length && !isFinal(fields[field])"></field-array>
+
+    <div *ngIf="!isFinal(fields[field]) && !fields[field].es && !fields[field].length" class="item">
+        <field-group [label]="field" [fields]="fields[field]"></field-group>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<h2>{{ label | titlecase }}</h2>
+
+<div class="item" *ngFor="let itemField of arrayFields">
+    <field [label]="itemField" [field]="itemField" *ngIf="itemField.es || isFinal(itemField)" [reference]="arrayFields"></field>
+
+    <field-group [fields]="itemField" *ngIf="!itemField.es && !isFinal(itemField)"></field-group>
+</div>

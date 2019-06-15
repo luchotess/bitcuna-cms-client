@@ -13,7 +13,7 @@ export class FuseNavigationService
     onItemCollapsed: Subject<any>;
     onItemCollapseToggled: Subject<any>;
 
-    navigationPages = [];
+    navigationPages;
 
     // Private
     private _onNavigationChanged: BehaviorSubject<any>;
@@ -114,7 +114,7 @@ export class FuseNavigationService
     // -----------------------------------------------------------------------------------------------------
 
     getDynamicNavigation (): Observable<any> {
-        return this._HttpClient.get('/api/blocks/main');
+        return this._HttpClient.get('/api/cms/v2');
     }
 
     /**

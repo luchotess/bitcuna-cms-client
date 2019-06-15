@@ -1,0 +1,31 @@
+<div class="page-layout carded fullwidth" fusePerfectScrollbar>
+
+    <div class="top-bg accent"></div>
+
+    <div class="center">
+        <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+            <h2 class="m-0">Página: {{ page }}</h2>
+        </div>
+
+        <div class="content-card">
+
+            <div class="toolbar px-24 py-8">
+                <span>Edita el contenido de la página</span>
+            </div>
+
+            <div class="actions" fxLayout="row" fxLayoutAlign="start center" class="p-24">
+                <button mat-raised-button color="primary" (click)="saveChanges()">Guardar Cambios</button>
+            </div>
+
+            <div class="content px-24 pt-24" *ngIf="currentPage">
+                <div *ngIf="!currentPage.length">
+                    <field-group [label]="page" [fields]="currentPage"></field-group>
+                </div>
+
+                <div *ngIf="currentPage.length">
+                    <field-array [label]="page" [arrayFields]="currentPage"></field-array>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

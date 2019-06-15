@@ -25,21 +25,13 @@ const appRoutes: Routes = [
         loadChildren: './main/admin/admin.module#AdminModule'
     },
     {
-        path        : 'promotor',
-        loadChildren: './main/promotor/promotor.module#PromotorModule'
-    },
-    {
-        path        : 'puerta',
-        loadChildren: './main/promotor/promotor.module#PromotorModule'
-    },
-    {
         path        : 'auth',
         loadChildren: './auth/auth.module#AuthModule'
     }
     ,
     {
         path      : '**',
-        redirectTo: 'admin/eventos'
+        redirectTo: 'admin/pages/home'
     }
 ];
 

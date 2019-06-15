@@ -1,0 +1,53 @@
+<div class="title">
+    <h3>{{ label | titlecase }}</h3>
+
+    <div class="btn-wrapper">
+        <button mat-button [color]="type === 'simple' ? 'accent' : ''" (click)="setType('simple')">Simple</button>
+        <button mat-button [color]="type === 'paragraph' ? 'accent' : ''" (click)="setType('paragraph')">Parrafo</button>
+        <button mat-button [color]="type === 'image' ? 'accent' : ''" (click)="setType('image')">Imagen</button>
+    </div>
+</div>
+
+<div class="inputs" *ngIf="type === 'simple'">
+    <mat-form-field appearance="outline">
+        <mat-label>{{ field['es'] && field['en'] ? 'Español' : 'Global' }}</mat-label>
+        <input #inputES [ngModel]="field['es'] ? field['es'] : field" matInput (keyup)="setNewValue(inputES.value, 'es')">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="field['es'] && field['en']">
+        <mat-label>English</mat-label>
+        <input #inputEN [ngModel]="field['en'] ? field['en'] : field" matInput (keyup)="setNewValue(inputEN.value, 'en')">
+    </mat-form-field>
+</div>
+
+<div class="inputs" *ngIf="type === 'paragraph'">
+    <mat-form-field appearance="outline">
+        <mat-label>{{ field['es'] && field['en'] ? 'Español' : 'Global' }}</mat-label>
+        <textarea #inputES [ngModel]="field['es'] ? field['es'] : field" matInput (keyup)="setNewValue(inputES.value, 'es')"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="field['es'] && field['en']">
+        <mat-label>English</mat-label>
+        <textarea #inputEN [ngModel]="field['en'] ? field['en'] : field" matInput (keyup)="setNewValue(inputEN.value, 'en')"></textarea>
+    </mat-form-field>
+</div>
+
+<div class="inputs" *ngIf="type === 'image'">
+    <div class="image-input">
+        <h5>{{ field['es'] && field['en'] ? 'Español' : 'Global' }}</h5>
+        <img src="/api/uploads/{{ field['es'] ? field['es'] : field }}" alt="">
+        <button type="button" mat-raised-button (click)="fileInputES.click()">Cambiar</button>
+        <input hidden (change)="onFileSelected(fileInputES, 'es')" #fileInputES type="file" id="fileES"
+               ng2FileSelect [uploader]="uploader">
+    </div>
+
+    <div class="image-input" *ngIf="field['es'] && field['en']">
+        <h5>English</h5>
+        <img src="/api/uploads/{{ field['en'] ? field['en'] : field }}" alt="">
+        <button type="button" mat-raised-button (click)="fileInputEN.click()">Cambiar</button>
+        <input hidden (change)="onFileSelected(fileInputEN, 'en')" #fileInputEN type="file" id="fileEN"
+               ng2FileSelect [uploader]="uploader">
+    </div>
+
+</div>
+

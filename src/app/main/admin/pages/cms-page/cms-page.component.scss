@@ -1,0 +1,14 @@
+.file-field {
+  img {
+    max-width: 200px;
+    max-height: 200px;
+  }
+}
+
+.item {
+  border: 1px solid lightgray;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}

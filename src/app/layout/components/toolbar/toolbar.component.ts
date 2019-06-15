@@ -13,7 +13,6 @@ import { Location }             from '@angular/common';
 import { FormGroup }            from '@angular/forms';
 import { MatDialog }            from '@angular/material';
 import { AdminService }         from '../../../main/admin/admin.service';
-import { ProfileFormComponent } from '../../../main/admin/components/modals/profile-form/profile-form.component';
 import { STATIC_FOLDERS }       from '../../../app.constants';
 
 @Component({
@@ -168,30 +167,5 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     public logout (): void {
         this._AuthService.logout();
-    }
-
-    public openProfileSettings (): void {
-        this.dialogRef = this._matDialog.open(ProfileFormComponent, {
-            panelClass: 'contact-form-dialog',
-            data      : {
-                action: 'new',
-                user  : this._AuthService.user
-            }
-        });
-
-        this.dialogRef.afterClosed()
-            .subscribe((response: FormGroup) => {
-                if (!response) {
-                    return;
-                }
-
-                this._AdminService.updatePromotor(response.getRawValue()).subscribe((user) => {
-                    this._AuthService.user.name = user.name;
-                    this._AuthService.user.avatar = user.avatar;
-                    this._AuthService.user.username = user.username;
-                    this._AuthService.user.phone = user.phone;
-                    this._AuthService.user.note = user.note;
-                });
-            });
     }
 }
